@@ -1,0 +1,108 @@
+---
+
+#Checking the Software Requirements
+
+- name: install x86 package dependencies on linux 6
+  yum: name={{ item }} state=present
+  with_items:
+    - binutils
+    - compat-libcap1
+    - compat-libstdc++*x86_64
+    - compat-libstdc++*i686
+    - gcc
+    - gcc-c++
+    - glibc-*x86_64
+    - glibc-*i686
+    - glibc-devel*x86_64
+    - glibc-devel*i686
+    - ksh
+    - libgcc-*i686
+    - libgcc-*x86_64
+    - libstdc++-*x86_64
+    - libstdc++-*i686
+    - libstdc++-devel-*x86_64
+    - libstdc++-devel-*i686
+    - libaio-*x86_64
+    - libaio-*i686
+    - libaio-devel*x86_64
+    - libaio-devel*i686
+    - make
+    - sysstat
+  when:
+    install_yum_packages
+
+# Creating Required Operating System Groups and Users
+- name: Creating Required Operating System Groups
+  group: name={{ item }} state=present
+  with_items:
+    - "{{ oracle_group }}"
+    - "{{ oracle_dba_group }}"
+
+- name: Creating Required Operating System User
+  user:
+    name: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"
+    groups: "{{ oracle_dba_group }}"
+    home: /home/{{ oracle_user }}
+    shell: /bin/bash
+    password: "{{ oracle_pass }}"
+    append: yes
+
+
+
+# Configuring Kernel Parameters and Resource Limits
+
+- name: Configuring Kernel Parameters
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    ignoreerrors: yes # Ignore errors about unknown keys
+  with_items:
+    - { name: "kernel.shmall", value: "2097152" }
+    - { name: "kernel.shmmax", value: "1050470400" }
+    - { name: "kernel.shmmni", value: "4096" }
+    - { name: "kernel.sem", value: "250 32000 100 128" }
+    - { name: "fs.file-max", value: "6815744" }
+    - { name: "fs.aio-max-nr", value: "1048576" }
+    - { name: "net.ipv4.ip_local_port_range", value: "9000 65500" }
+    - { name: "net.core.rmem_default", value: "262144" }
+    - { name: "net.core.rmem_max", value: "4194304" }
+    - { name: "net.core.wmem_default", value: "262144" }
+    - { name: "net.core.wmem_max", value: "1048576" }
+
+- name: Configuring Resource Limits
+  lineinfile:
+    dest: /etc/security/limits.conf
+    state: present
+    line: "{{ item }}"
+  with_items:
+    - "oracle soft nproc 16384"
+    - "oracle hard nproc 16384"
+    - "oracle soft nofile 4096"
+    - "oracle hard nofile 65536"
+    - "oracle soft stack 10240"
+
+# Creating Required Directories
+- name: create the oracle installation path
+  file:
+    mode: 0755
+    path: "{{ oracle_base }}"
+    state: directory
+    group: "{{ oracle_group }}"
+    owner: "{{ oracle_user }}"
+
+# Configuring the oracle User's Environment
+- name: Configuring the oracle User's Environment
+  lineinfile: dest=/home/{{ oracle_user }}/.bashrc state=present line="{{ item }}"
+  with_items:
+    - "export TMP=/tmp"
+    - "export TMPDIR=$TMP"
+    - "export ORACLE_UNQNAME={{ oracle_db_sid }}"
+    - "export ORACLE_SID={{ oracle_db_sid }}"
+    - "export ORACLE_BASE={{ oracle_base }}"
+    - "export ORACLE_HOME={{ oracle_home }}"
+    - "export PATH=/usr/sbin:$PATH; export PATH"
+    - "export PATH=$ORACLE_HOME/bin:$PATH; export PATH"
+    - "export LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib"
+    - "export CLASSPATH=$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib"

@@ -1,0 +1,12 @@
+---
+oracle_user: oracle
+# hashed password for the oracle user
+# python -c 'import crypt; print crypt.crypt("oracle", "$1$salt$")'
+oracle_pass: $1$salt$6hY7SFGTovD5BRJ.4zYAd1
+oracle_group: oinstall
+oracle_dba_group: dba
+
+# oracle base directory
+oracle_base: /u01/app/oracle
+oracle_db_sid: oem_reop
+oracle_home: "{{ oracle_base }}/product/11.2.0/db_1"
