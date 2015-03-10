@@ -1,5 +1,5 @@
 ---
-  - hosts: localhost
+  - hosts: em12c
     sudo: yes
     roles:
       - oradb11g
