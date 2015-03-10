@@ -121,3 +121,31 @@
     - "export PATH=$ORACLE_HOME/bin:$PATH; export PATH"
     - "export LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib"
     - "export CLASSPATH=$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib"
+
+#
+# Install Oracle DB 11gR2 in silent mode
+#
+- name: check if oracle has already been installed
+  stat: path=/etc/oratab
+  register: oracle_installed
+
+- name: compose the oracle automated installer settings
+  template:
+    src: db11gR2.rsp.j2
+    dest: "/tmp/db_install.rsp"
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"
+  when: not oracle_installed.stat.exists
+
+- name: install oracle
+  sudo_user: "{{ oracle_user }}"
+  command: "{{ db11gr2_unzip_path }}/database/runInstaller -silent -force -ignoreSysPrereqs -responseFile /tmp/db_install.rsp"
+  when: not oracle_installed.stat.exists
+
+- name: general oracle post-installation
+  command: "{{ oracle_inventory }}/orainstRoot.sh"
+  when: not oracle_installed.stat.exists
+
+- name: db-specific oracle post-installation
+  command: "{{ oracle_home }}/root.sh"
+  when: not oracle_installed.stat.exists
