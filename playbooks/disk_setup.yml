@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  tasks:
+    # Create a ext4 filesystem on /dev/sdb1 and check disk blocks.
+    - file: mode=0755 path=/u01 state=directory
+    - filesystem: fstype=ext4 dev=/dev/sdb1
+    - mount: name=/u01 src=/dev/sdb1 fstype=ext4 state=mounted
