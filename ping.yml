@@ -1,0 +1,4 @@
+---
+  - hosts: em12c
+    tasks:
+      - ping:
