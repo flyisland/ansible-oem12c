@@ -1,4 +1,6 @@
 ---
+install_yum_packages: false
+
 oracle_user: oracle
 # hashed password for the oracle user
 # python -c 'import crypt; print crypt.crypt("oracle", "$1$salt$")'

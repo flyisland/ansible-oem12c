@@ -4,4 +4,4 @@
     roles:
       - oradb11g
     vars:
-      install_yum_packages: true
+#      install_yum_packages: true
