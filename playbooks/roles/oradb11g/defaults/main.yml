@@ -11,4 +11,7 @@ oracle_dba_group: dba
 # oracle base directory
 oracle_base: /u01/app/oracle
 oracle_db_sid: oemreop
-oracle_home: "{{ oracle_base }}/product/11.2.0/db_1"
+oracle_home: {{ oracle_base }}/product/11.2.0/db_1 # Software Location
+database_file: {{ oracle_base }}/oradata
+database_pwd: Oracle123
+oracle_inventory: /u01/app/oraInventory

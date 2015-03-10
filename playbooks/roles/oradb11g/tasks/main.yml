@@ -2,6 +2,10 @@
 
 #Checking the Software Requirements
 
+- name: install dev tools
+  yum: name="@Development tools" state=present
+  when:
+    install_yum_packages
 - name: install x86 package dependencies on linux 6
   yum: name={{ item }} state=present
   with_items:
@@ -28,6 +32,10 @@
     - libaio-devel*i686
     - make
     - sysstat
+    - unixODBC-*x86_64
+    - unixODBC-*i686
+    - unixODBC-devel*x86_64
+    - unixODBC-devel*i686
   when:
     install_yum_packages
 
@@ -57,7 +65,7 @@
     name: "{{ item.name }}"
     value: "{{ item.value }}"
     state: present
-    ignoreerrors: yes # Ignore errors about unknown keys
+    reload: yes
   with_items:
     - { name: "kernel.shmall", value: "2097152" }
     - { name: "kernel.shmmax", value: "1050470400" }
@@ -88,6 +96,13 @@
   file:
     mode: 0755
     path: "{{ oracle_base }}"
+    state: directory
+    group: "{{ oracle_group }}"
+    owner: "{{ oracle_user }}"
+- name: create the oracle inventory path
+  file:
+    mode: 0755
+    path: "{{ oracle_inventory }}"
     state: directory
     group: "{{ oracle_group }}"
     owner: "{{ oracle_user }}"
