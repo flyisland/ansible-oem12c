@@ -18,7 +18,7 @@ Vagrant.configure(2) do |config|
     ah.vm.provision "file", source: "inventory", destination: "inventory"
     ah.vm.provision "file", source: ".vagrant/machines/em12c/virtualbox/private_key", destination: "em12c_private_key"
     ah.vm.provision "shell", inline: "chmod 600 /home/vagrant/em12c_private_key"
-    ah.vm.provision "shell", inline: "touch /home/vagrant/.ssh/known_hosts"
+    ah.vm.provision "shell", inline: "sudo -u vagrant touch /home/vagrant/.ssh/known_hosts"
 
     ah.vm.provision "ansible" do |ansible|
       ansible.playbook="ping.yml"
