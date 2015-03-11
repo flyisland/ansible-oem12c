@@ -16,7 +16,6 @@ Vagrant.configure(2) do |config|
     ah.vm.network :private_network, ip: "10.10.10.10"
 
     ah.vm.provision "file", source: "inventory", destination: "inventory"
-    config.vm.provision "shell", inline: "alias ap='sudo ansible-playbook -i /home/vagrant/inventory -v'"
     ah.vm.provision "ansible" do |ansible|
       ansible.playbook="ping.yml"
     end
