@@ -16,6 +16,12 @@ oracle_db_globalDBName: "{{ oracle_db_sid }}.example.com"
 oracle_db_pwd: Oracle123
 oracle_inventory: /u01/app/oraInventory
 
+# oem directory
+middleware_home: "{{ oracle_base }}/product/middleware"
+agent_base: "{{ oracle_base }}/product/agent"
+
+
+# env
 oracle_user_env:
   ORACLE_UNQNAME: "{{ oracle_db_sid }}"
   ORACLE_SID: "{{ oracle_db_sid }}"

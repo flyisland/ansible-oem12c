@@ -1,25 +1,17 @@
 ---
-
+#
+# prepare the database for oem 12c
+#
 - name: turn off the enterprise manager web console
   sudo_user: "{{ oracle_user }}"
   environment: oracle_user_env
   command: "{{ oracle_home }}/bin/emctl stop dbconsole"
   ignore_errors: yes
 
-- name: create redo log directory
-  file:
-    mode: 0755
-    path: "{{ oracle_base }}/product/redo_logs"
-    state: directory
-    group: "{{ oracle_group }}"
-    owner: "{{ oracle_user }}"
-
-- name: compose the oracle database ready sql
-  template:
-    src: em12c_pre.sql.j2
-    dest: "/tmp/em12c_pre.sql"
-    owner: "{{ oracle_user }}"
-    group: "{{ oracle_group }}"
+- name: drop the database control schema
+  sudo_user: "{{ oracle_user }}"
+  environment: oracle_user_env
+  command: "{{ oracle_home }}/bin/emca -deconfig dbcontrol db -repos drop -silent -SYS_PWD {{ oracle_db_pwd }} -SYSMAN_PWD {{ oracle_db_pwd }} -SID {{ oracle_db_sid }} -PORT 1521"
 
 - name: create redo log directory
   file:
@@ -33,15 +25,30 @@
   stat: "path={{ oracle_base }}/product/redo_logs/log1c.rdo"
   register: redo_log_created
 
+- name: compose the sql script file
+  template:
+    src: em12c_pre.sql.j2
+    dest: "/tmp/em12c_pre.sql"
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"
+  when: not redo_log_created.stat.exists
+
 - name: prepare the database for em12c
   sudo_user: "{{ oracle_user }}"
   environment: oracle_user_env
-  command: "cat /tmp/em12c_pre.sql | {{ oracle_home }}/bin/sqlplus / as sysdba"
+  shell: "cat /tmp/em12c_pre.sql | {{ oracle_home }}/bin/sqlplus / as sysdba"
+  when: not redo_log_created.stat.exists
 
-- name: create middleware home directory
+#
+# Install oem 12c
+#
+- name: create middleware home and agent base directory
   file:
     mode: 0755
-    path: "{{ middleware_home }}"
+    path: "{{ item }}"
     state: directory
     group: "{{ oracle_group }}"
     owner: "{{ oracle_user }}"
+  with_items:
+    - "{{ middleware_home }}"
+    - "{{ agent_base }}"
