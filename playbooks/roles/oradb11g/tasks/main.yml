@@ -149,3 +149,13 @@
 - name: db-specific oracle post-installation
   command: "{{ oracle_home }}/root.sh"
   when: not oracle_installed.stat.exists
+
+#
+# TODO: Automating Database Startup and Shutdown on Linux
+#
+- name: set oracle to autostart
+  lineinfile:
+    dest: /etc/oratab
+    state: present
+    regexp: "^{{ oracle_db_sid }}"
+    line: "{{ oracle_db_sid }}:{{ oracle_home }}:Y"
