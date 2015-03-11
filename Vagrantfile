@@ -8,7 +8,7 @@
 Vagrant.configure(2) do |config|
 
   config.vm.define "ah" , primary: true do |ah| # ansible host
-    ah.vm.box = "precise32"
+    ah.vm.box = "centos65-x86_64"
     ah.vm.hostname = "ansible.example.com"
     ah.vm.synced_folder "E:/OFM", "/software"
     ah.vm.synced_folder "R:/", "/ramdisk"
@@ -16,6 +16,10 @@ Vagrant.configure(2) do |config|
     ah.vm.network :private_network, ip: "10.10.10.10"
 
     ah.vm.provision "file", source: "inventory", destination: "inventory"
+    ah.vm.provision "file", source: ".vagrant/machines/em12c/virtualbox/private_key", destination: "em12c_private_key"
+    ah.vm.provision "shell", inline: "chmod 600 /home/vagrant/em12c_private_key"
+    ah.vm.provision "shell", inline: "touch /home/vagrant/.ssh/known_hosts"
+
     ah.vm.provision "ansible" do |ansible|
       ansible.playbook="ping.yml"
     end
