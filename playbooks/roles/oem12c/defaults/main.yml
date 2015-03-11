@@ -1,0 +1,25 @@
+---
+install_yum_packages: false
+
+oracle_user: oracle
+# hashed password for the oracle user
+# python -c 'import crypt; print crypt.crypt("oracle", "$1$salt$")'
+oracle_pass: $1$salt$6hY7SFGTovD5BRJ.4zYAd1
+oracle_group: oinstall
+oracle_dba_group: dba
+
+# oracle base directory
+oracle_base: /u01/app/oracle
+oracle_home: "{{ oracle_base }}/product/11.2.0/db_1" # Software Location
+oracle_db_sid: oemreop
+oracle_db_globalDBName: "{{ oracle_db_sid }}.example.com"
+oracle_db_pwd: Oracle123
+oracle_inventory: /u01/app/oraInventory
+
+oracle_user_env:
+  ORACLE_UNQNAME: "{{ oracle_db_sid }}"
+  ORACLE_SID: "{{ oracle_db_sid }}"
+  ORACLE_BASE: "{{ oracle_base }}"
+  ORACLE_HOME: "{{ oracle_home }}"
+  LD_LIBRARY_PATH: "{{ oracle_home }}/lib:/lib:/usr/lib"
+  CLASSPATH: "{{ oracle_home }}/jlib:{{ oracle_home }}/rdbms/jlib"

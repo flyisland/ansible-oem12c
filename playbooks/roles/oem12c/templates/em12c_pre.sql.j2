@@ -1,0 +1,10 @@
+ALTER SYSTEM SET processes=300 SCOPE=SPFILE;
+ALTER SYSTEM SET session_cached_cursors=200 SCOPE=SPFILE;
+ALTER SYSTEM SET sga_target=2G SCOPE=SPFILE;
+ALTER SYSTEM SET shared_pool_size=600M SCOPE=SPFILE;
+ALTER SYSTEM SET pga_aggregate_target=1G SCOPE=SPFILE;
+ALTER SYSTEM SET job_queue_processes=20 SCOPE=SPFILE;
+ALTER SYSTEM SET db_securefile=PERMITTED SCOPE=BOTH;
+ALTER DATABASE ADD LOGFILE ('{{ oracle_base }}/product/redo_logs/log1c.rdo', '{{ oracle_base }}/product/redo_logs/log2c.rdo', '{{ oracle_base }}/product/redo_logs/log3c.rdo' ) SIZE 100M;
+SHUTDOWN IMMEDIATE;
+STARTUP;
