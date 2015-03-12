@@ -1,5 +1,6 @@
 ---
 - hosts: em12c
+  gather_facts: no
   sudo: yes
   tasks:
     # Create a ext4 filesystem on /dev/sdb1 and check disk blocks.
