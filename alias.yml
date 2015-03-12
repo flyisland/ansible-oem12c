@@ -1,0 +1,8 @@
+---
+  - hosts: localhost
+    gather_facts: no
+    tasks:
+      - lineinfile:
+          dest: /home/vagrant/.bashrc
+          state: present
+          line: "alias ap='ansible-playbook -i /home/vagrant/inventory -v'"
