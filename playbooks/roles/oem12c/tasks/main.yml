@@ -52,3 +52,15 @@
   with_items:
     - "{{ middleware_home }}"
     - "{{ agent_base }}"
+
+- name: compose the install reponse file
+  template:
+    src: em_install_12.1.0.4.rsp.j2
+    dest: "/tmp/em_install_12.1.0.4.rsp"
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"
+
+- name: install em12c # please run it mannually
+  sudo_user: "{{ oracle_user }}"
+  environment: oracle_user_env
+  debug: msg="{{ em12c_unzip_path }}/runInstaller -responseFile /tmp/em_install_12.1.0.4.rsp"
