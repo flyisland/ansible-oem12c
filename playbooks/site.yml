@@ -1,8 +1,10 @@
 ---
   - hosts: em12c
+    gather_facts: no
     sudo: yes
     roles:
-      - oradb11g
+#      - oradb11g
+      - oem12c
     vars:
 #      install_yum_packages: true
       db11gr2_unzip_path: /software
