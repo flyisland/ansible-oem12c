@@ -8,7 +8,7 @@
 Vagrant.configure(2) do |config|
 
   config.vm.define "ah" , primary: true do |ah| # ansible host
-    ah.vm.box = "centos65_50G"
+    ah.vm.box = "centos65_50G.box"
     ah.vm.hostname = "ansible.example.com"
     ah.vm.synced_folder "E:/OFM", "/software"
     ah.vm.synced_folder "R:/", "/ramdisk"
