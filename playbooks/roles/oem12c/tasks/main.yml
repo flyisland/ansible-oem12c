@@ -63,4 +63,7 @@
 - name: install em12c # please run it mannually
   sudo_user: "{{ oracle_user }}"
   environment: oracle_user_env
-  debug: msg="{{ em12c_unzip_path }}/runInstaller -responseFile /tmp/em_install_12.1.0.4.rsp"
+  # run with GUI model
+  debug: msg="{{ em12c_unzip_path }}/runInstaller"
+  # run with silent model
+#  debug: msg="{{ em12c_unzip_path }}/runInstaller -silent -responseFile /tmp/em_install_12.1.0.4.rsp"
