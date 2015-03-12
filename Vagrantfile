@@ -15,6 +15,7 @@ Vagrant.configure(2) do |config|
 
     ah.vm.network :private_network, ip: "10.10.10.10"
 
+    ah.vm.provision "file", source: "install_ansible.sh", destination: "install_ansible.sh"
     ah.vm.provision "file", source: "prepare_ansible.sh", destination: "prepare_ansible.sh"
     ah.vm.provision "file", source: "alias.yml", destination: "/tmp/alias.yml"
     ah.vm.provision "ansible" do |ansible|
@@ -31,7 +32,7 @@ Vagrant.configure(2) do |config|
     em12c.vm.network :private_network, ip: "10.10.10.20"
 
     em12c.vm.provider :virtualbox do |vb|
-      vb.memory = 12288
+      vb.memory = 8 * 1024
       vb.cpus = 2
       vb.name = "em12c"
       file_to_disk = "S:/VirtualBoxVMs/disk/100g.vdi"
