@@ -1,0 +1,52 @@
+---
+# Create a ext4 filesystem on /dev/sdb1 and check disk blocks.
+- stat: path=/u01
+  register: disk_mounted
+
+- copy: src=sdb_pt.txt dest=/tmp/sdb_pt.txt
+  when: not disk_mounted.stat.exists
+
+- shell: "sfdisk /dev/sdb < /tmp/sdb_pt.txt"
+  when: not disk_mounted.stat.exists
+
+- file: mode=0755 path=/u01 state=directory
+  when: not disk_mounted.stat.exists
+
+- filesystem: fstype=ext4 dev=/dev/sdb1
+  when: not disk_mounted.stat.exists
+
+# mount the new filesystem on /u01
+- mount: name=/u01 src=/dev/sdb1 fstype=ext4 state=mounted
+  when: not disk_mounted.stat.exists
+
+- name: check if the swap has already been created
+  stat:
+    path: "{{ swap_file_path }}"
+    get_checksum: no
+    get_md5: no
+  register: swap_file_created
+
+# create swap
+- name: Create swap file
+  command: dd if=/dev/zero of={{ swap_file_path }} bs=1024 count={{ swap_file_size_kb }}k
+  when: not swap_file_created.stat.exists
+
+- name: Change swap file permissions
+  file:
+    path: "{{ swap_file_path }}"
+    owner: root
+    group: root
+    mode: 0600
+  when: not swap_file_created.stat.exists
+
+- name: Make swap
+  command: mkswap {{ swap_file_path }}
+  when: not swap_file_created.stat.exists
+
+- name: Add swap into /etc/fstab file
+  mount: name=none src={{ swap_file_path }} fstype=swap state=present
+  when: not swap_file_created.stat.exists
+
+- name: Mount swap
+  command: "swapon {{ swap_file_path }}"
+  when: not swap_file_created.stat.exists
