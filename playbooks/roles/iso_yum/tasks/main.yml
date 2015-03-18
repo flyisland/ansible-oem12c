@@ -1,0 +1,29 @@
+---
+# mount the oracle linux installation ISO file as repository of yum
+- stat: path="{{ yum_repo_path }}/{{ iso_repo_name }}"
+  register: iso_repo_created
+
+- file: mode=0755 path="{{ cdrom_path }}" state=directory
+  when: not iso_repo_created.stat.exists
+
+- mount:
+    name: "{{ cdrom_path }}"
+    src: "{{ iso_fullname }}"
+    fstype: iso9660
+    opts: loop,ro
+    state: mounted
+  when: not iso_repo_created.stat.exists
+
+- file: mode=0755 path="{{ yum_repo_path }}/bak" state=directory
+  when: not iso_repo_created.stat.exists
+
+- shell: "mv {{ yum_repo_path }}/*.repo {{ yum_repo_path }}/bak"
+  when: not iso_repo_created.stat.exists
+
+- template:
+    src: OL65.repo.j2
+    dest: "{{ yum_repo_path }}/{{ iso_repo_name }}"
+  when: not iso_repo_created.stat.exists
+
+- command: "yum clean all"
+  when: not iso_repo_created.stat.exists

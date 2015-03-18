@@ -1,0 +1,5 @@
+---
+iso_fullname: /software/OracleLinux-R6-U5-Server-x86_64-dvd.iso
+cdrom_path: /mnt/cdrom
+yum_repo_path: /etc/yum.repos.d
+iso_repo_name: OL65.repo
