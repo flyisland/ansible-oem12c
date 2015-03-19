@@ -141,8 +141,9 @@
 
 - name: install oracle
   sudo_user: "{{ oracle_user }}"
-  command: "{{ db11gr2_unzip_path }}/database/runInstaller -silent -force -ignoreSysPrereqs -responseFile /tmp/db_install.rsp"
+  command: "{{ db11gr2_unzip_path }}/database/runInstaller -silent -force -ignoreSysPrereqs -waitforcompletion -responseFile /tmp/db_install.rsp"
   when: not oracle_installed.stat.exists
+  ignore_errors: yes
 
 - name: general oracle post-installation
   command: "{{ oracle_inventory }}/orainstRoot.sh"
@@ -153,7 +154,7 @@
   when: not oracle_installed.stat.exists
 
 #
-# TODO: Automating Database Startup and Shutdown on Linux
+# Automating Database Startup and Shutdown on Linux
 #
 - name: set oracle to autostart
   lineinfile:
@@ -161,3 +162,39 @@
     state: present
     regexp: "^{{ oracle_db_sid }}"
     line: "{{ oracle_db_sid }}:{{ oracle_home }}:Y"
+
+# http://docs.oracle.com/cd/E18676_01/doc/server.112/e10839/strt_stp.htm
+- name: create a database startup and shutdown script
+  template:
+    src: dbora.j2
+    dest: "/etc/init.d/dbora"
+    owner: "root"
+    group: "{{ oracle_dba_group }}"
+    mode: "750"
+
+- name: ln -s /etc/init.d/dbora /etc/rc.d/rc0.d/K01dbora
+  file:
+    mode: 0755
+    state: link
+    src: "/etc/init.d/dbora"
+    dest: "/etc/rc.d/rc0.d/K01dbora"
+    group: "{{ oracle_group }}"
+    owner: "{{ oracle_user }}"
+
+- name: ln -s /etc/init.d/dbora /etc/rc.d/rc3.d/S99dbora
+  file:
+    mode: 0755
+    state: link
+    src: "/etc/init.d/dbora"
+    dest: "/etc/rc.d/rc3.d/S99dbora"
+    group: "{{ oracle_group }}"
+    owner: "{{ oracle_user }}"
+
+- name: ln -s /etc/init.d/dbora /etc/rc.d/rc5.d/S99dbora
+  file:
+    mode: 0755
+    state: link
+    src: "/etc/init.d/dbora"
+    dest: "/etc/rc.d/rc5.d/S99dbora"
+    group: "{{ oracle_group }}"
+    owner: "{{ oracle_user }}"
