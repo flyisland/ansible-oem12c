@@ -154,47 +154,21 @@
   when: not oracle_installed.stat.exists
 
 #
-# Automating Database Startup and Shutdown on Linux
+# Create Database Startup and Shutdown on Linux
 #
-- name: set oracle to autostart
-  lineinfile:
-    dest: /etc/oratab
-    state: present
-    regexp: "^{{ oracle_db_sid }}"
-    line: "{{ oracle_db_sid }}:{{ oracle_home }}:Y"
+- name: create the script path
+  file:
+    mode: 0755
+    path: "/home/{{ oracle_user }}/scripts"
+    state: directory
+    group: "{{ oracle_group }}"
+    owner: "{{ oracle_user }}"
 
 # http://docs.oracle.com/cd/E18676_01/doc/server.112/e10839/strt_stp.htm
 - name: create a database startup and shutdown script
   template:
-    src: dbora.j2
-    dest: "/etc/init.d/dbora"
-    owner: "root"
-    group: "{{ oracle_dba_group }}"
     mode: "750"
-
-- name: ln -s /etc/init.d/dbora /etc/rc.d/rc0.d/K01dbora
-  file:
-    mode: 0755
-    state: link
-    src: "/etc/init.d/dbora"
-    dest: "/etc/rc.d/rc0.d/K01dbora"
-    group: "{{ oracle_group }}"
-    owner: "{{ oracle_user }}"
-
-- name: ln -s /etc/init.d/dbora /etc/rc.d/rc3.d/S99dbora
-  file:
-    mode: 0755
-    state: link
-    src: "/etc/init.d/dbora"
-    dest: "/etc/rc.d/rc3.d/S99dbora"
-    group: "{{ oracle_group }}"
-    owner: "{{ oracle_user }}"
-
-- name: ln -s /etc/init.d/dbora /etc/rc.d/rc5.d/S99dbora
-  file:
-    mode: 0755
-    state: link
-    src: "/etc/init.d/dbora"
-    dest: "/etc/rc.d/rc5.d/S99dbora"
+    src: dbora.j2
+    dest: "/home/{{ oracle_user }}/scripts/dbora.sh"
     group: "{{ oracle_group }}"
     owner: "{{ oracle_user }}"
