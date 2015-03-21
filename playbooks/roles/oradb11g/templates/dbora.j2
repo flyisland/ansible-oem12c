@@ -12,13 +12,14 @@ fi
 case $1 in
 'start')
   echo -n $"Starting Oracle Database ..."
-  $ORACLE_HOME/bin/lsnrctl start
   $ORACLE_HOME/bin/dbstart $ORACLE_HOME
-  # TODO sqlplus startup
+  echo 'STARTUP;' | {{ oracle_home }}/bin/sqlplus / as sysdba
+  $ORACLE_HOME/bin/lsnrctl start
   ;;
 'stop')
   echo -n $"Stopping Oracle Database:"
   $ORACLE_HOME/bin/lsnrctl stop
+  echo 'SHUTDOWN IMMEDIATE;' | {{ oracle_home }}/bin/sqlplus / as sysdba
   $ORACLE_HOME/bin/dbshut $ORACLE_HOME
   ;;
 'restart')
