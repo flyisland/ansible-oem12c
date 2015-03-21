@@ -3,9 +3,11 @@
     gather_facts: no
     sudo: yes
     roles:
+      - disk_setup
+      - iso_yum
       - oradb11g
       - oem12c
     vars:
-#      install_yum_packages: true
+      install_yum_packages: true
       db11gr2_unzip_path: /software
       em12c_unzip_path: /software/em12104_linux64
