@@ -25,6 +25,7 @@ wls_pwd: Welcome1
 nm_pwd: "{{ wls_pwd }}"
 oms_instance_base: "{{ oracle_base }}/product/gc_inst"
 agent_reg_pwd: "{{ wls_pwd }}"
+sysman_pwd: "{{ wls_pwd }}"
 oms_home: "{{ middleware_home }}/oms"
 
 # env
