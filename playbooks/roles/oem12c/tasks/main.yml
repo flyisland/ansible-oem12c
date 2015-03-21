@@ -73,6 +73,13 @@
   lineinfile: dest=/home/{{ oracle_user }}/.bashrc state=present line="{{ item }}"
   with_items:
     - "export OMS_HOME={{ oms_home }}"
-    - "export AGENT_HOME={{ agent_base }}/core/12.1.0.1.0"
+    - "export AGENT_HOME={{ agent_base }}/core/12.1.0.4.0"
+    - "export PATH=$OMS_HOME/bin:/usr/sbin:$PATH"
 
-# TODO: add em12c start / stop script
+- name: add em12c start / stop script
+  template:
+    mode: "750"
+    src: em12c.j2
+    dest: "/home/{{ oracle_user }}/scripts/em12c.sh"
+    group: "{{ oracle_group }}"
+    owner: "{{ oracle_user }}"

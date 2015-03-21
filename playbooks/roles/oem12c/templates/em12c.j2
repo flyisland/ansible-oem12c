@@ -1,0 +1,33 @@
+#! /bin/sh  -x
+#
+#make sure this shell is ran under user "oracle"
+if [ $(whoami) != '{{ oracle_user }}' ]; then
+  echo "Must be oracle to start/stop the OEM 12c!"
+  exit -1;
+fi
+
+case $1 in
+'start')
+  echo -n $"Starting Oracle Enterprise Manager 12c ..."
+  $OMS_HOME/bin/emctl start oms
+  $AGENT_HOME/bin/emctl start agent
+  ;;
+'stop')
+  echo -n $"Stopping Oracle Enterprise Manager 12c:"
+  $OMS_HOME/bin/emctl stop oms -all
+  $AGENT_HOME/bin/emctl stop agent
+  ;;
+'status')
+  $OMS_HOME/bin/emctl status oms -details -sysman_pwd {{ sysman_pwd }}
+  ;;
+'restart')
+   $0 stop
+   $0 start
+   ;;
+*)
+  echo "usage: $0 {start|stop|status|restart}"
+  exit
+  ;;
+esac
+#
+exit
