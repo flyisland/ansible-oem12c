@@ -19,7 +19,7 @@ oracle_inventory: /u01/app/oraInventory
 # oem vars for installation
 middleware_home: "{{ oracle_base }}/product/middleware"
 agent_base: "{{ oracle_base }}/product/agent"
-db_host_name: "em12c.example.com"
+db_host_name: "em12c"
 wls_user: weblogic
 wls_pwd: Welcome1
 nm_pwd: "{{ wls_pwd }}"
