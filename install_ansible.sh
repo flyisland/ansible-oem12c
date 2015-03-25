@@ -7,4 +7,4 @@ sudo yum clean all
 sudo yum makecache
 sudo yum install ansible -y
 
-ansible-playbook /tmp/alias.yml
+ansible-playbook /vagrant/setup_ansible.yml

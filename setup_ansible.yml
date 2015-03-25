@@ -9,23 +9,17 @@
       - name: make sure known_hosts file is present
         file:
           path: "{{ user_home }}/.ssh/known_hosts"
-          owner: vagrant
-          group: vagrant
           mode: 0664
 
       - name: create ansible_files directory
         file:
           path: "{{ ansible_files }}"
           state: directory
-          owner: vagrant
-          group: vagrant
 
       - name: copy private keys into ansible_files directory to chmod
         copy:
           src: "/vagrant/.vagrant/machines/{{ item }}/virtualbox/private_key"
           dest: "{{ ansible_files }}/{{ item }}_private_key"
-          owner: vagrant
-          group: vagrant
           mode: 0600
         with_items:
           - "em12c"
