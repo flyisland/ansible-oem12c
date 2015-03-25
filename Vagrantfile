@@ -40,4 +40,34 @@ Vagrant.configure(2) do |config|
     end
   end
 
+  config.vm.define "wls1" , primary: true do |wls1|
+    wls1.vm.box = "oel65-64"
+    wls1.vm.hostname = "wls1.example.com"
+    wls1.vm.synced_folder "E:/OFM", "/software"
+    wls1.vm.synced_folder "R:/", "/ramdisk"
+
+    wls1.vm.network :private_network, ip: "10.10.10.30"
+
+    wls1.vm.provider :virtualbox do |vb|
+      vb.memory = 2 * 1024
+      vb.cpus = 2
+      vb.name = "wls1"
+    end
+  end
+
+  config.vm.define "http" , primary: true do |http|
+    http.vm.box = "oel65-64"
+    http.vm.hostname = "http.example.com"
+    http.vm.synced_folder "E:/OFM", "/software"
+    http.vm.synced_folder "R:/", "/ramdisk"
+
+    http.vm.network :private_network, ip: "10.10.10.40"
+
+    http.vm.provider :virtualbox do |vb|
+      vb.memory = 2 * 1024
+      vb.cpus = 2
+      vb.name = "http"
+    end
+  end
+
 end
