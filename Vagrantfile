@@ -15,9 +15,6 @@ Vagrant.configure(2) do |config|
 
     ah.vm.network :private_network, ip: "10.10.10.10"
 
-    ah.vm.provision "file", source: "install_ansible.sh", destination: "install_ansible.sh"
-    ah.vm.provision "file", source: "prepare_ansible.sh", destination: "prepare_ansible.sh"
-    ah.vm.provision "file", source: "alias.yml", destination: "/tmp/alias.yml"
     ah.vm.provision "ansible" do |ansible|
       ansible.playbook="ping.yml"
     end

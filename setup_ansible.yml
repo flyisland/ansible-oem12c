@@ -1,0 +1,50 @@
+---
+  - hosts: localhost
+
+    gather_facts: no
+    vars:
+      user_home: /home/vagrant
+      ansible_files: "{{ user_home }}/ansible_files"
+    tasks:
+      - name: make sure known_hosts file is present
+        file:
+          path: "{{ user_home }}/.ssh/known_hosts"
+          owner: vagrant
+          group: vagrant
+          mode: 0664
+
+      - name: create ansible_files directory
+        file:
+          path: "{{ ansible_files }}"
+          state: directory
+          owner: vagrant
+          group: vagrant
+
+      - name: copy private keys into ansible_files directory to chmod
+        copy:
+          src: "/vagrant/.vagrant/machines/{{ item }}/virtualbox/private_key"
+          dest: "{{ ansible_files }}/{{ item }}_private_key"
+          owner: vagrant
+          group: vagrant
+          mode: 0600
+        with_items:
+          - "em12c"
+          - "wls1"
+          - "http"
+
+      - name: build inventory file
+        lineinfile:
+          dest: "{{ ansible_files }}/inventory"
+          line: "{{ item.hname }} ansible_ssh_host={{ item.ip }} ansible_ssh_port=22 ansible_ssh_user=vagrant ansible_ssh_private_key_file={{ ansible_files }}/{{ item.hname }}_private_key"
+          create: yes
+          mode: 0600
+        with_items:
+          - { hname: "em12c", ip: "10.10.10.20"}
+          - { hname: "wls1",  ip: "10.10.10.30"}
+          - { hname: "http",  ip: "10.10.10.40"}
+
+      - name: set alias
+        lineinfile:
+          dest: "{{ user_home }}/.bashrc"
+          regexp: "^alias ap="
+          line: "alias ap='ansible-playbook -i {{ ansible_files }}/inventory -v'"
