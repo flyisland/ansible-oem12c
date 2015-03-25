@@ -1,10 +1,10 @@
 ---
 # mount the oracle linux installation ISO file as repository of yum
-- stat: path="{{ yum_repo_path }}/{{ iso_repo_name }}"
-  register: iso_repo_created
+- stat: path="{{ cdrom_path }}/RPM-GPG-KEY"
+  register: cdrom_mounted
 
 - file: mode=0755 path="{{ cdrom_path }}" state=directory
-  when: not iso_repo_created.stat.exists
+  when: not cdrom_mounted.stat.exists
 
 - mount:
     name: "{{ cdrom_path }}"
@@ -12,7 +12,11 @@
     fstype: iso9660
     opts: loop,ro
     state: mounted
-  when: not iso_repo_created.stat.exists
+  when: not cdrom_mounted.stat.exists
+
+
+- stat: path="{{ yum_repo_path }}/{{ iso_repo_name }}"
+  register: iso_repo_created
 
 - file: mode=0755 path="{{ yum_repo_path }}/bak" state=directory
   when: not iso_repo_created.stat.exists
