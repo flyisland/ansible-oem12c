@@ -1,10 +1,15 @@
 ---
 # Creating Required Operating System Groups and Users
+
+- stat: path="/home/{{ oracle_user }}"
+  register: user_home
+
 - name: Creating Required Operating System Groups
   group: name={{ item }} state=present
   with_items:
     - "{{ oracle_group }}"
     - "{{ oracle_dba_group }}"
+  when: not user_home.stat.exists
 
 - name: Creating Required Operating System User
   user:
@@ -15,6 +20,7 @@
     shell: /bin/bash
     password: "{{ oracle_pass }}"
     append: yes
+  when: not user_home.stat.exists
 
 
 
@@ -39,6 +45,7 @@
     - { name: "net.core.rmem_max", value: "4194304" }
     - { name: "net.core.wmem_default", value: "262144" }
     - { name: "net.core.wmem_max", value: "1048576" }
+  when: not user_home.stat.exists
 
 
 - name: Configuring Resource Limits
@@ -52,6 +59,7 @@
     - "oracle soft nofile 4096"
     - "oracle hard nofile 65536"
     - "oracle soft stack 10240"
+  when: not user_home.stat.exists
 
 - name: Allow oracle to run any commands anywhere
   lineinfile:
@@ -61,8 +69,13 @@
   with_items:
     - "## Allow oracle to run any commands anywhere"
     - "{{ oracle_user }}    ALL=(ALL)       NOPASSWD: ALL"
+  when: not user_home.stat.exists
 
 # Create Central Inventory
+- stat: path="/etc/oraInst.loc"
+  register: central_inventory
+
+
 - name: Create the software inventory location pointer file
   lineinfile:
     dest: /etc/oraInst.loc
@@ -71,7 +84,8 @@
     mode: 0644
   with_items:
     - "inventory_loc = {{ oracle_inventory }}"
-    - "inst_group = oracle_group"
+    - "inst_group = {{ oracle_group }}"
+  when: not central_inventory.stat.exists
 
 - name: Create the inventory directory if it doesn't exist
   file:
@@ -79,3 +93,4 @@
     state: directory
     group: "{{ oracle_group }}"
     mode: 0770
+  when: not central_inventory.stat.exists
