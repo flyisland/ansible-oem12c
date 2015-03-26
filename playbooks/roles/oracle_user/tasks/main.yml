@@ -52,3 +52,30 @@
     - "oracle soft nofile 4096"
     - "oracle hard nofile 65536"
     - "oracle soft stack 10240"
+
+- name: Allow oracle to run any commands anywhere
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    line: "{{ item }}"
+  with_items:
+    - "## Allow oracle to run any commands anywhere"
+    - "{{ oracle_user }}    ALL=(ALL)       NOPASSWD: ALL"
+
+# Create Central Inventory
+- name: Create the software inventory location pointer file
+  lineinfile:
+    dest: /etc/oraInst.loc
+    create: yes
+    line: "{{ item }}"
+    mode: 0644
+  with_items:
+    - "inventory_loc = {{ oracle_inventory }}"
+    - "inst_group = oracle_group"
+
+- name: Create the inventory directory if it doesn't exist
+  file:
+    path: "{{ oracle_inventory }}"
+    state: directory
+    group: "{{ oracle_group }}"
+    mode: 0770

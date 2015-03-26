@@ -9,4 +9,3 @@ oracle_home: "{{ oracle_base }}/product/11.2.0/db_1" # Software Location
 oracle_db_sid: oemrepo
 oracle_db_globalDBName: "{{ oracle_db_sid }}.example.com"
 oracle_db_pwd: Oracle123
-oracle_inventory: /u01/app/oraInventory

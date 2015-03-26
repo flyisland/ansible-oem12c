@@ -47,13 +47,6 @@
     state: directory
     group: "{{ oracle_group }}"
     owner: "{{ oracle_user }}"
-- name: create the oracle inventory path
-  file:
-    mode: 0755
-    path: "{{ oracle_inventory }}"
-    state: directory
-    group: "{{ oracle_group }}"
-    owner: "{{ oracle_user }}"
 
 # Configuring the oracle User's Environment
 - name: Configuring the oracle User's Environment
