@@ -1,0 +1,42 @@
+- name: install x86 package dependencies on linux 6 for OHS 12c
+  yum: name={{ item }} state=present
+  with_items:
+    - binutils
+    - compat-libcap1
+    - compat-libstdc++*x86_64
+    - libgcc
+    - libstdc++
+    - libstdc++-devel
+    - sysstat
+    - gcc
+    - gcc-c++
+    - make
+    - glibc
+    - glibc-devel
+    - libaio
+    - libaio-devel
+
+- stat: path="{{ ohs_home }}"
+  register: ohs_home_dir
+
+- name: create ohs home directory
+  file:
+    path: "{{ ohs_home }}"
+    state: directory
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"
+    mode: 0770
+  when: not ohs_home_dir.stat.exists
+
+- name: create response file for OHS 12
+  template:
+    src: web_http_server_1213.rsp.j2
+    dest: "/tmp/web_http_server_1213.rsp"
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"
+  when: not ohs_home_dir.stat.exists
+
+- name: install oracle http server 12c
+  sudo_user: "{{ oracle_user }}"
+  command: "{{ ohs12_unzip_path }}/ohs_121200_linux64.bin -silent -waitforcompletion -responseFile /tmp/web_http_server_1213.rsp"
+  when: not ohs_home_dir.stat.exists

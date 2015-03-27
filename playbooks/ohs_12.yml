@@ -1,0 +1,10 @@
+---
+  - hosts: http
+    gather_facts: no
+    sudo: yes
+    roles:
+      - oracle_user
+      - iso_yum
+      - ohs_12
+    vars:
+      oracle_base: /opt/oracle
