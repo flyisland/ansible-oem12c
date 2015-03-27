@@ -7,4 +7,3 @@
       - iso_yum
       - ohs_12
     vars:
-      oracle_base: /opt/oracle
