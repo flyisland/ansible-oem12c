@@ -1,4 +1,4 @@
 ---
 
 ohs_home: "{{ oracle_base }}/ohs12"
-ohs12_unzip_path: /software
+ohs12_unzip_path: "{{ software_dir }}"

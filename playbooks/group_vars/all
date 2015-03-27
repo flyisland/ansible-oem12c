@@ -9,3 +9,4 @@ oracle_group: oinstall
 oracle_dba_group: dba
 
 oracle_inventory: /home/{{ oracle_user }}/oraInventory
+software_dir: /software
