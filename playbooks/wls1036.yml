@@ -4,7 +4,6 @@
     sudo: yes
     roles:
       - oracle_user
-      - iso_yum
       - java
+      - wls103
     vars:
-      oracle_base: /opt/oracle

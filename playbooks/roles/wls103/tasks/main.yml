@@ -1,0 +1,24 @@
+- stat: path="{{ bea_home }}"
+  register: bea_home_dir
+
+- name: create ohs home directory
+  file:
+    path: "{{ bea_home }}"
+    state: directory
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"
+    mode: 0770
+  when: not bea_home_dir.stat.exists
+
+- name: create response file for WebLogic Server 10.3.x
+  template:
+    src: wls_103.xml.j2
+    dest: "/tmp/wls_103.xml"
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"
+  when: not bea_home_dir.stat.exists
+
+- name: install oracle WebLogic Server 10.3.x
+  sudo_user: "{{ oracle_user }}"
+  command: "{{ java_home }}/bin/java -Djava.security.egd=file:/dev/./urandom -jar {{ software_dir }}/wls1036_generic.jar -mode=silent -silent_xml=/tmp/wls_103.xml"
+  when: not bea_home_dir.stat.exists

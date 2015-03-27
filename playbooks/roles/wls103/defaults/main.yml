@@ -1,0 +1,2 @@
+---
+bea_home: "{{ oracle_base }}/mw11g"
