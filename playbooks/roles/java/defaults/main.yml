@@ -1,0 +1,4 @@
+---
+java_gz_file: jdk-7u71-linux-x64.gz
+java_unarchive_dir: jdk1.7.0_71
+java_home: /usr/java/{{ java_unarchive_dir }}

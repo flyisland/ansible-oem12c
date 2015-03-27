@@ -1,0 +1,10 @@
+---
+  - hosts: wls1
+    gather_facts: no
+    sudo: yes
+    roles:
+      - oracle_user
+      - iso_yum
+      - java
+    vars:
+      oracle_base: /opt/oracle
