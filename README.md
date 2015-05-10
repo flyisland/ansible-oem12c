@@ -1,2 +1,2 @@
-# ansible-oem12c
-try to use ansible to automate the setup of oem 12c
+# ansible-ofm
+Using ansible to automate the setup of Oracle Fusion Middleware products
