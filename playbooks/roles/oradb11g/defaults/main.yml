@@ -4,7 +4,6 @@ install_yum_packages: false
 host_name: em12c.example.com
 
 # oracle base directory
-oracle_base: /u01/app/oracle
 oracle_home: "{{ oracle_base }}/product/11.2.0/db_1" # Software Location
 oracle_db_sid: oemrepo
 oracle_db_globalDBName: "{{ oracle_db_sid }}.example.com"

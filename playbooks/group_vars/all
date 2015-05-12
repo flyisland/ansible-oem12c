@@ -8,7 +8,7 @@ oracle_pass: $1$salt$6hY7SFGTovD5BRJ.4zYAd1
 oracle_group: oinstall
 oracle_dba_group: dba
 
-oracle_base: /opt/oracle  # dir to install all productions of oracle
+oracle_base: /u01/oracle  # dir to install all productions of oracle
 oracle_inventory: /home/{{ oracle_user }}/oraInventory
 software_dir: /software
 
