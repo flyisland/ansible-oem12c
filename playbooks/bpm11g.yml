@@ -1,14 +1,13 @@
 ---
-  - hosts: bpm11gxe
+  - hosts: bpm11g
     gather_facts: no
     sudo: yes
     roles:
-#      - disk_setup
+      - disk_setup
       - iso_yum
       - oracle_user
       - java
       - wls103
-#      - oradb11g
       - bpm11g
     vars:
       install_yum_packages: true
