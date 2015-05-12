@@ -8,3 +8,4 @@
     vars:
       install_yum_packages: true
       db11gr2_unzip_path: /software
+      db_host_name: em12c.example.com
