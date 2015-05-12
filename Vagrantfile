@@ -71,4 +71,18 @@ Vagrant.configure(2) do |config|
     end
   end
 
+  config.vm.define "bpm11g" , primary: true do |bpm11g|
+    bpm11g.vm.box = "oel65-64"
+    bpm11g.vm.hostname = "bpm11g.example.com"
+    bpm11g.vm.synced_folder "E:/OFM", "/software"
+    bpm11g.vm.synced_folder "R:/", "/ramdisk"
+
+    bpm11g.vm.network :private_network, ip: "10.10.10.50"
+
+    bpm11g.vm.provider :virtualbox do |vb|
+      vb.memory = 4 * 1024
+      vb.cpus = 2
+      vb.name = "bpm11g"
+    end
+  end
 end
