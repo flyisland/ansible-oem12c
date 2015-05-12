@@ -1,0 +1,10 @@
+---
+  - hosts: bpm11g
+    gather_facts: no
+    sudo: yes
+    roles:
+      - iso_yum
+      - oradb11g
+    vars:
+      install_yum_packages: true
+      db11gr2_unzip_path: /software
