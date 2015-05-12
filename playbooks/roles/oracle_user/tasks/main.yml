@@ -18,7 +18,7 @@
     groups: "{{ oracle_dba_group }}"
     home: /home/{{ oracle_user }}
     shell: /bin/bash
-    password: "{{ oracle_pass }}"
+    password: "{{ oracle_user_pwd }}"
     append: yes
   when: not user_home.stat.exists
 

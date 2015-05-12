@@ -4,7 +4,7 @@
 oracle_user: oracle
 # hashed password for the oracle user -- 'oracle'
 # http://docs.ansible.com/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
-oracle_pass: $1$salt$6hY7SFGTovD5BRJ.4zYAd1
+oracle_user_pwd: $1$salt$6hY7SFGTovD5BRJ.4zYAd1
 oracle_group: oinstall
 oracle_dba_group: dba
 
