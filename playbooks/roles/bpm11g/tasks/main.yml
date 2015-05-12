@@ -1,4 +1,7 @@
 ---
+- stat: path="{{ mw_home }}/Oracle_SOA1"
+  register: bpm11g_dir
+
 - name: install x86 package dependencies on linux 6
   yum: name={{ item }} state=present
   with_items:
@@ -21,6 +24,7 @@
     - glibc-devel-*
     - libaio-*x86_64
     - libaio-devel-*x86_64
+  when: not bpm11g_dir.stat.exists
 
 - name: create response file for BPM 11g
   template:
@@ -28,7 +32,9 @@
     dest: "/tmp/soa11g.rsp"
     owner: "{{ oracle_user }}"
     group: "{{ oracle_group }}"
+  when: not bpm11g_dir.stat.exists
 
 - name: install bpm11g
   sudo_user: "{{ oracle_user }}"
   command: "{{ bpm11g_unzip_path }}/Disk1/runInstaller -silent -jreLoc {{ java_home }} -responseFile /tmp/soa11g.rsp -waitforcompletion"
+  when: not bpm11g_dir.stat.exists
