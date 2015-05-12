@@ -1,11 +1,21 @@
 ---
-  - hosts: bpm11g
+  - hosts: bpm11gxe
     gather_facts: no
     sudo: yes
     roles:
+#      - disk_setup
       - iso_yum
-      - oradb11g
+      - oracle_user
+      - java
+      - wls103
+#      - oradb11g
+      - bpm11g
     vars:
       install_yum_packages: true
-      db11gr2_unzip_path: /software
-      db_host_name: em12c.example.com
+      db11gr2_unzip_path: /software/
+      db_host_name: bpm11g.example.com
+      oracle_db_sid: bpm11gdb
+      oracle_db_globalDBName: "{{ oracle_db_sid }}.example.com"
+
+      mw_home: "{{ oracle_base }}/mw11g"
+      bpm11g_unzip_path: /software/soa11g

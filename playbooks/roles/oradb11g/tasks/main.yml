@@ -83,10 +83,6 @@
   when: not oracle_installed.stat.exists
   ignore_errors: yes
 
-- name: general oracle post-installation
-  command: "{{ oracle_inventory }}/orainstRoot.sh"
-  when: not oracle_installed.stat.exists
-
 - name: db-specific oracle post-installation
   command: "{{ oracle_home }}/root.sh"
   when: not oracle_installed.stat.exists

@@ -9,7 +9,10 @@ oracle_group: oinstall
 oracle_dba_group: dba
 
 oracle_base: /u01/oracle  # dir to install all productions of oracle
-oracle_inventory: /home/{{ oracle_user }}/oraInventory
+oracle_inventory: "{{ oracle_base }}/oraInventory"
 software_dir: /software
 
 java_home: /usr/java/default
+
+#database related
+oracle_db_pwd: Oracle123

@@ -24,6 +24,7 @@
           mode: 0600
         with_items:
           - "bpm11g"
+          - "bpm11gxe"
         ignore_errors: yes
 
       - name: build inventory file
@@ -35,6 +36,7 @@
           mode: 0600
         with_items:
           - { hname: "bpm11g",  ip: "10.10.10.50"}
+          - { hname: "bpm11gxe",  ip: "10.10.10.60"}
 
       - name: set alias
         lineinfile:

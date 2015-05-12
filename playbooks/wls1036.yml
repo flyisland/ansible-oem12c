@@ -7,3 +7,4 @@
       - java
       - wls103
     vars:
+      mw_home: "{{ oracle_base }}/mw11g"

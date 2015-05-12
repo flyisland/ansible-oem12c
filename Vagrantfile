@@ -83,6 +83,27 @@ Vagrant.configure(2) do |config|
       vb.memory = 4 * 1024
       vb.cpus = 2
       vb.name = "bpm11g"
+      file_to_disk = "E:/VBoxVMs/disk/bpm11g100g.vdi"
+      unless File.exist?(file_to_disk)
+        vb.customize ['createhd', '--filename', file_to_disk, '--size', 100 * 1024]
+      end
+      vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', file_to_disk]
     end
   end
+
+  config.vm.define "bpm11gxe" , primary: true do |bpm11gxe|
+    bpm11gxe.vm.box = "oel65-64"
+    bpm11gxe.vm.hostname = "bpm11gxe.example.com"
+    bpm11gxe.vm.synced_folder "E:/OFM", "/software"
+    bpm11gxe.vm.synced_folder "R:/", "/ramdisk"
+
+    bpm11gxe.vm.network :private_network, ip: "10.10.10.60"
+
+    bpm11gxe.vm.provider :virtualbox do |vb|
+      vb.memory = 4 * 1024
+      vb.cpus = 2
+      vb.name = "bpm11gxe"
+    end
+  end
+
 end
