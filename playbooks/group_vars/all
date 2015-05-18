@@ -16,3 +16,4 @@ java_home: /usr/java/default
 
 #database related
 oracle_db_pwd: Oracle123
+oracle_db_listener_port: 1521
