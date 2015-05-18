@@ -1,0 +1,38 @@
+- stat: path="{{ xe11g_unzip_path }}"
+  register: xe11g_unzip_path_check
+
+- name: create xe11g_unzip_path
+  file:
+    path: "{{ xe11g_unzip_path }}"
+    state: directory
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"
+    mode: 0770
+  when: not xe11g_unzip_path_check.stat.exists
+
+- name: Unarchive the XE11g file
+  unarchive:
+    src: "{{ xe11g_file1 }}"
+    dest: "{{ xe11g_unzip_path }}"
+    copy: no
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"
+  when: not xe11g_unzip_path_check.stat.exists
+
+- name: install XE11g
+  yum: name="{{ xe11g_unzip_path }}/Disk1/oracle-xe-11.2.0-1.0.x86_64.rpm" state=present
+
+- name: create response file for XE11g
+  template:
+    src: xe.rsp.j2
+    dest: "/tmp/xe.rsp"
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"
+
+- name: configure the XE11g database
+  command: /etc/init.d/oracle-xe configure responseFile=/tmp/xe.rsp
+
+- name: set XE related env for 'oracle'
+  lineinfile: dest=/home/{{ oracle_user }}/.bashrc state=present line="{{ item }}"
+  with_items:
+    - "export RCU_JDBC_TRIM_BLOCKS=true"
