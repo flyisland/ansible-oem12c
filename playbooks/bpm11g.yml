@@ -17,4 +17,4 @@
       oracle_db_globalDBName: "{{ oracle_db_sid }}.example.com"
 
       mw_home: "{{ oracle_base }}/mw11g"
-      bpm11g_unzip_path: /software/soa11g
+      soa11g_unzip_path: /software/soa11g
