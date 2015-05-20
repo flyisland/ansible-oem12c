@@ -1,0 +1,20 @@
+- name: create dir for java
+  file:
+    path: "{{ java_base_path }}"
+    state: directory
+    mode: 0555
+
+- name: install java
+  unarchive:
+    src: "{{ java_file }}"
+    dest: "{{ java_base_path }}"
+    copy: no
+
+- name: link 'java_unarchive_path' to 'java_home'
+  file: src={{ java_unarchive_path }} dest={{ java_home }} state=link
+
+- name: set java env for 'oracle'
+  lineinfile: dest=/home/{{ oracle_user }}/.bashrc state=present line="{{ item }}"
+  with_items:
+    - "export JAVA_HOME={{ java_home }}"
+    - "export PATH={{ java_home }}/bin:$PATH"

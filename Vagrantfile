@@ -91,4 +91,24 @@ Vagrant.configure(2) do |config|
     end
   end
 
+  config.vm.define "soa11g" , primary: true do |soa11g|
+    soa11g.vm.box = "oel65-64"
+    soa11g.vm.hostname = "soa11g.example.com"
+    soa11g.vm.synced_folder "E:/OFM", "/software"
+    soa11g.vm.synced_folder "R:/", "/ramdisk"
+
+    soa11g.vm.network :private_network, ip: "10.10.10.60"
+
+    soa11g.vm.provider :virtualbox do |vb|
+      vb.memory = 2 * 1024
+      vb.cpus = 2
+      vb.name = "soa11g"
+      file_to_disk = "E:/VBoxVMs/disk/soa11g100g.vdi"
+      unless File.exist?(file_to_disk)
+        vb.customize ['createhd', '--filename', file_to_disk, '--size', 100 * 1024]
+      end
+      vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', file_to_disk]
+    end
+  end
+
 end

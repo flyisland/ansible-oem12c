@@ -1,22 +1,6 @@
 ---
-- name: create dir for java
-  file:
-    path: /usr/java
-    state: directory
-    mode: 0555
+- stat: path="{{ java_unarchive_path }}"
+  register: java_dir
 
-- name: install java
-  unarchive:
-    src: "{{ software_dir }}/{{ java_gz_file }}"
-    dest: /usr/java
-    creates: "{{ java_unarchive_dir }}"
-    copy: no
-
-- name: link 'java_unarchive_dir' to 'java_home'
-  file: src={{ java_unarchive_dir }} dest={{ java_home }} state=link
-
-- name: set java env for 'oracle'
-  lineinfile: dest=/home/{{ oracle_user }}/.bashrc state=present line="{{ item }}"
-  with_items:
-    - "export JAVA_HOME={{ java_home }}"
-    - "export PATH={{ java_home }}/bin:$PATH"
+- include: install_java.yml
+  when: not java_dir.stat.exists

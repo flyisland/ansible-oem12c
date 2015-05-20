@@ -1,5 +1,5 @@
 ---
-  - hosts: bpm11g
+  - hosts: soa11g
     gather_facts: no
     sudo: yes
     roles:
@@ -9,12 +9,34 @@
       - java
       - wls103
       - soa11g
+      - swapfile
+      - xe11g
+      - rcu11g
     vars:
       install_yum_packages: true
-      db11gr2_unzip_path: /software/
-      db_host_name: bpm11g.example.com
-      oracle_db_sid: bpm11gdb
-      oracle_db_globalDBName: "{{ oracle_db_sid }}.example.com"
+
+      java_file: "{{ software_dir }}/jdk-7u71-linux-x64.gz"
+      java_base_path: "/usr/java"
+      java_unarchive_path: /usr/java/jdk1.7.0_71
 
       mw_home: "{{ oracle_base }}/mw11g"
-      soa11g_unzip_path: /software/soa11g
+      wls11g_file: "{{ software_dir }}/wls1036_generic.jar"
+
+      soa11g_file1: "{{ software_dir }}/ofm_soa_generic_11.1.1.7.0_disk1_1of2.zip"
+      soa11g_file2: "{{ software_dir }}/ofm_soa_generic_11.1.1.7.0_disk1_2of2.zip"
+      soa11g_unzip_path: "{{ software_dir }}/soa11g"
+
+      xe11g_file1: "{{ software_dir }}/oracle-xe-11.2.0-1.0.x86_64.rpm"
+      xe11g_unzip_path: "{{ software_dir }}/xe11g"
+      swap_file_size: 2G
+      swap_file_path: /u01/swapfile
+
+      rcu11g_file1: "{{ software_dir }}/ofm_rcu_linux_11.1.1.7.0_64_disk1_1of1.zip"
+      rcu11g_unzip_path: "{{ software_dir }}/rcu11g"
+      rcu_db_host: "soa11g.example.com"
+      rcu_db_listener_port: "{{ oracle_db_listener_port }}"
+      rcu_db_service: XE
+      rcu_db_user: sys
+      rcu_db_role: SYSDBA
+      rcu_prefix: DEV
+      ofm_product: "SOA"

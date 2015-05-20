@@ -20,5 +20,5 @@
 
 - name: install oracle WebLogic Server 10.3.x
   sudo_user: "{{ oracle_user }}"
-  command: "{{ java_home }}/bin/java -Djava.security.egd=file:/dev/./urandom -jar {{ software_dir }}/wls1036_generic.jar -mode=silent -silent_xml=/tmp/wls_103.xml"
+  command: "{{ java_home }}/bin/java -Djava.security.egd=file:/dev/./urandom -jar {{ wls11g_file }} -mode=silent -silent_xml=/tmp/wls_103.xml"
   when: not mw_home_dir.stat.exists
