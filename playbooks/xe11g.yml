@@ -1,0 +1,26 @@
+---
+  - hosts: xe11g
+    gather_facts: no
+    sudo: yes
+    roles:
+      - iso_yum
+      - oracle_user
+      - swapfile
+      - xe11g
+      - rcu11g
+    vars:
+      install_yum_packages: true
+      xe11g_file1: "{{ software_dir }}/oracle-xe-11.2.0-1.0.x86_64.rpm"
+      xe11g_unzip_path: "{{ software_dir }}/xe11g"
+      swap_file_size: 2G
+      swap_file_path: /u01/swapfile
+
+      rcu11g_file1: "{{ software_dir }}/ofm_rcu_linux_11.1.1.7.0_64_disk1_1of1.zip"
+      rcu11g_unzip_path: "{{ software_dir }}/rcu11g"
+      rcu_db_host: "xe11g.example.com"
+      rcu_db_listener_port: "{{ oracle_db_listener_port }}"
+      rcu_db_service: XE
+      rcu_db_user: sys
+      rcu_db_role: SYSDBA
+      rcu_prefix: DEV1
+      ofm_product: "SOA"

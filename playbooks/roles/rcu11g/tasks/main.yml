@@ -1,0 +1,21 @@
+---
+- include: install_rcu.yml
+
+
+- name: create password file for rcu
+  template:
+    src: rcupwd.txt.j2
+    dest: "/tmp/rcupwd.txt"
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"
+
+- name: setting ruc components
+  include_vars: "{{ ofm_product }}_components.yml"
+
+# ./rcu -silent -createRepository -databaseType ORACLE -connectString xe11g.example.com:1521 -dbUser sys -dbRole SYSDBA -schemaPrefix DEV -component MDS -useSamePasswordForAllSchemaUsers true -f < /tmp/rcupwd.txt
+
+- name: create repository with rcu
+  shell: "{{ rcu11g_unzip_path }}/rcuHome/bin/rcu -silent -createRepository -databaseType ORACLE -connectString {{ rcu_db_host }}:{{rcu_db_listener_port}}:{{ rcu_db_service }} -dbUser {{ rcu_db_user}} -dbRole {{ rcu_db_role}} -schemaPrefix {{ rcu_prefix}} {{ rcu_compoents}} -useSamePasswordForAllSchemaUsers true -f < /tmp/rcupwd.txt"
+  sudo_user: "{{ oracle_user }}"
+  environment:
+    RCU_JDBC_TRIM_BLOCKS: true # for oracle database xe Edition

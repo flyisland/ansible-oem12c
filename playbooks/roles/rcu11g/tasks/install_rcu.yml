@@ -1,0 +1,20 @@
+- stat: path="{{ rcu11g_unzip_path }}"
+  register: rcu11g_unzip_path_check
+
+- name: create rcu11g_unzip_path
+  file:
+    path: "{{ rcu11g_unzip_path }}"
+    state: directory
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"
+    mode: 0770
+  when: not rcu11g_unzip_path_check.stat.exists
+
+- name: Unarchive the rcu11g file
+  unarchive:
+    src: "{{ rcu11g_file1 }}"
+    dest: "{{ rcu11g_unzip_path }}"
+    copy: no
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"
+  when: not rcu11g_unzip_path_check.stat.exists

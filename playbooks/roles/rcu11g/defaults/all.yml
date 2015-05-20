@@ -1,0 +1,7 @@
+---
+rcu_db_host: localhost
+rcu_db_listener_port: 1521
+rcu_db_service: XE
+rcu_db_user: sys
+rcu_db_role: SYSDBA
+rcu_prefix: DEV
