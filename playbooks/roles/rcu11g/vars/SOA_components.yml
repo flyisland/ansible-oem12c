@@ -1,1 +1,1 @@
-  rcu_compoents: "-component MDS -component SOAINFRA -component ORABAM -component ORASDPM"
+  rcu_compoents: "-component MDS -component SOAINFRA -component BAM -component ORASDPM"
