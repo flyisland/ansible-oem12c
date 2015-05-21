@@ -1,7 +1,7 @@
 - stat: path="{{ mw_home }}/wlserver_10.3"
   register: mw_home_dir
 
-- name: create ohs home directory
+- name: create middleware home directory
   file:
     path: "{{ mw_home }}"
     state: directory
