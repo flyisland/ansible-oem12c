@@ -25,6 +25,8 @@
         with_items:
           - "bpm11g"
           - "soa11g"
+          - "wls1"
+          - "wls2"
         ignore_errors: yes
 
       - name: build inventory file
@@ -37,6 +39,8 @@
         with_items:
           - { hname: "bpm11g",  ip: "10.10.10.50"}
           - { hname: "soa11g",  ip: "10.10.10.60"}
+          - { hname: "wls1",  ip: "10.10.10.30"}
+          - { hname: "wls2",  ip: "10.10.10.40"}
 
       - name: set alias
         lineinfile:

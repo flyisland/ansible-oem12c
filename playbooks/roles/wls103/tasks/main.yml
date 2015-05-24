@@ -22,3 +22,8 @@
   sudo_user: "{{ oracle_user }}"
   command: "{{ java_home }}/bin/java -Djava.security.egd=file:/dev/./urandom -jar {{ wls11g_file }} -mode=silent -silent_xml=/tmp/wls_103.xml"
   when: not mw_home_dir.stat.exists
+
+- name: set WebLogic Server env for 'oracle'
+  lineinfile: dest=/home/{{ oracle_user }}/.bashrc state=present line="{{ item }}"
+  with_items:
+    - "export WL_HOME={{ mw_home }}/wlserver_10.3"
