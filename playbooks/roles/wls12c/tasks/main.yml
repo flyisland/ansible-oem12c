@@ -1,0 +1,36 @@
+- stat: path="{{ oracle_home }}/wlserver"
+  register: oracle_home_dir
+
+- name: install x86 package dependencies on linux 6
+  yum: name={{ item }} state=present
+  with_items:
+    - libXext
+    - libXrender
+    - libXtst
+
+- name: create middleware home directory
+  file:
+    path: "{{ oracle_home }}"
+    state: directory
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"
+    mode: 0770
+  when: not oracle_home_dir.stat.exists
+
+- name: create response file for WebLogic Server 12c
+  template:
+    src: wls_12c.rsp.j2
+    dest: "/tmp/wls_12c.rsp"
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"
+  when: not oracle_home_dir.stat.exists
+
+- name: install oracle WebLogic Server 12c
+  sudo_user: "{{ oracle_user }}"
+  command: "{{ java_home }}/bin/java -Djava.security.egd=file:/dev/./urandom -jar {{ wls12c_file }} -silent -responseFile /tmp/wls_12c.rsp"
+  when: not oracle_home_dir.stat.exists
+
+- name: set WebLogic Server env for 'oracle'
+  lineinfile: dest=/home/{{ oracle_user }}/.bashrc state=present line="{{ item }}"
+  with_items:
+    - "export WL_HOME={{ oracle_home }}/wlserver"

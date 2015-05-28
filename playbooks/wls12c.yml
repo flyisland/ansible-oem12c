@@ -1,0 +1,16 @@
+---
+  - hosts: wls*
+    gather_facts: no
+    sudo: yes
+    roles:
+      - iso_yum
+      - oracle_user
+      - java
+      - wls12c
+    vars:
+      java_file: "{{ software_dir }}/jdk-7u80-linux-x64.gz"
+      java_base_path: "/usr/java"
+      java_unarchive_path: /usr/java/jdk1.7.0_80
+
+      oracle_home: "{{ oracle_base }}/mw12c"
+      wls12c_file: "{{ software_dir }}/fmw_12.1.3.0.0_wls.jar"
