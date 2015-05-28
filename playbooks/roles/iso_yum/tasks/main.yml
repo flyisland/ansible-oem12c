@@ -31,3 +31,6 @@
 
 - command: "yum clean all"
   when: not iso_repo_created.stat.exists
+
+- name: install redhat-lsb, since OUI depends on it to check the os version
+  yum: name="redhat-lsb" state=present

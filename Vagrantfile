@@ -11,14 +11,10 @@ Vagrant.configure(2) do |config|
     # https://googledrive.com/host/0B4tZlTbOXHYWVGpHRWZuTThGVUE/centos65_virtualbox_50G.box
     ah.vm.box = "centos65_virtualbox_50G"
     ah.vm.hostname = "ansible.example.com"
-    ah.vm.synced_folder "E:/OFM", "/software"
+    ah.vm.synced_folder "D:/DevProjects", "/DevProjects"
     ah.vm.synced_folder "R:/", "/ramdisk"
 
-    ah.vm.network :private_network, ip: "10.10.10.10"
-
-    ah.vm.provision "ansible" do |ansible|
-      ansible.playbook="ping.yml"
-    end
+    ah.vm.network :private_network, ip: "10.10.10.9"
   end
 
   config.vm.define "em12c" , primary: true do |em12c|
