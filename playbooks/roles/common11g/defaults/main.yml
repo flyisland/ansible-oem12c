@@ -1,0 +1,11 @@
+install_yum_packages: true
+
+java_file: "{{ software_dir }}/jdk-7u80-linux-x64.gz"
+java_base_path: "/usr/java"
+java_unarchive_path: /usr/java/jdk1.7.0_80
+
+mw_home: "{{ oracle_base }}/mw11g"
+wls11g_file: "{{ software_dir }}/wls1036_generic.jar"
+
+osb11g_file: "{{ software_dir }}/ofm_osb_generic_11.1.1.7.0_disk1_1of1.zip"
+osb11g_unzip_path: "{{ software_dir }}/osb11g"

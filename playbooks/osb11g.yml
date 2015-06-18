@@ -1,0 +1,7 @@
+---
+  - hosts: wls*
+    gather_facts: no
+    sudo: yes
+    roles:
+      - common11g
+      - osb11g

@@ -1,0 +1,54 @@
+- name: install x86 package dependencies on linux 6
+  yum: name={{ item }} state=present
+  with_items:
+    - redhat-lsb # for check OS version
+    - binutils-*x86_64
+    - compat-libcap1-*x86_64
+    - compat-libstdc++-*x86_64
+    - compat-libstdc++-*i686
+    - libgcc-*i686
+    - libgcc-*x86_64
+    - libstdc++-*x86_64
+    - libstdc++-*i686
+    - libstdc++-devel-*x86_64
+    - sysstat-*x86_64
+    - gcc-*x86_64
+    - gcc-c++-*x86_64
+    - glibc-*i686
+    - glibc-*x86_64
+    - glibc-devel-*x86_64
+    - glibc-devel-*
+    - libaio-*x86_64
+    - libaio-devel-*x86_64
+
+- stat: path="{{ osb11g_unzip_path }}"
+  register: osb11g_unzip_path_check
+
+- name: create osb11g_unzip_path
+  file:
+    path: "{{ osb11g_unzip_path }}"
+    state: directory
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"
+    mode: 0770
+  when: not osb11g_unzip_path_check.stat.exists
+
+- name: Unarchive the OSB 11g files
+  unarchive:
+    src: "{{ osb11g_file }}"
+    dest: "{{ osb11g_unzip_path }}"
+    copy: no
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"
+  when: not osb11g_unzip_path_check.stat.exists
+
+- name: create response file for OSB 11g
+  template:
+    src: osb11g.rsp.j2
+    dest: "/tmp/osb11g.rsp"
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"
+
+- name: install OSB 11g
+  sudo_user: "{{ oracle_user }}"
+  command: "{{ osb11g_unzip_path }}/Disk1/runInstaller -silent -jreLoc {{ java_home }} -responseFile /tmp/osb11g.rsp -waitforcompletion"

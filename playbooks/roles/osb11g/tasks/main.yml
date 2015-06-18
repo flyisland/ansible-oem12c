@@ -1,0 +1,6 @@
+---
+- stat: path="{{ mw_home }}/Oracle_OSB1"
+  register: osb11g_dir
+
+- include: install_osb.yml
+  when: not osb11g_dir.stat.exists

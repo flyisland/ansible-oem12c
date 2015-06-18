@@ -1,0 +1,4 @@
+---
+dependencies:
+  - { role: iso_yum }
+  - { role: oracle_user }
