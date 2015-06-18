@@ -1,6 +1,6 @@
 ---
 - stat: path="{{ mw_home }}/Oracle_SOA1"
-  register: bpm11g_dir
+  register: soa11g_dir
 
 - include: install_soa.yml
-  when: not bpm11g_dir.stat.exists
+  when: not soa11g_dir.stat.exists
