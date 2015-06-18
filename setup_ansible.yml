@@ -1,49 +1,61 @@
 ---
-  - hosts: localhost
+- hosts: localhost
+  sudo: yes
+  gather_facts: no
+  vars:
+    user_home: /home/vagrant
+    ansible_files: "{{ user_home }}/ansible_files"
+  tasks:
+    - name: make sure known_hosts file is present
+      file:
+        path: "{{ user_home }}/.ssh/known_hosts"
+        mode: 0664
+        owner: vagrant
+        group: vagrant
+        state: touch
 
-    gather_facts: no
-    vars:
-      user_home: /home/vagrant
-      ansible_files: "{{ user_home }}/ansible_files"
-    tasks:
-      - name: make sure known_hosts file is present
-        file:
-          path: "{{ user_home }}/.ssh/known_hosts"
-          mode: 0664
-          state: touch
+    - name: create ansible_files directory
+      file:
+        path: "{{ ansible_files }}"
+        owner: vagrant
+        group: vagrant
+        state: directory
 
-      - name: create ansible_files directory
-        file:
-          path: "{{ ansible_files }}"
-          state: directory
+    - name: copy private keys into ansible_files directory to chmod
+      copy:
+        src: "/vagrant/.vagrant/machines/{{ item }}/virtualbox/private_key"
+        dest: "{{ ansible_files }}/{{ item }}_private_key"
+        mode: 0600
+        owner: vagrant
+        group: vagrant
+      with_items:
+        - "soa11g"
+        - "wls1"
+        - "wls2"
+      ignore_errors: yes
 
-      - name: copy private keys into ansible_files directory to chmod
-        copy:
-          src: "/vagrant/.vagrant/machines/{{ item }}/virtualbox/private_key"
-          dest: "{{ ansible_files }}/{{ item }}_private_key"
-          mode: 0600
-        with_items:
-          - "bpm11g"
-          - "soa11g"
-          - "wls1"
-          - "wls2"
-        ignore_errors: yes
+    - name: build inventory file
+      lineinfile:
+        dest: "{{ ansible_files }}/inventory"
+        regexp: "^{{ item.hname }}"
+        line: "{{ item.hname }} ansible_ssh_host={{ item.ip }} ansible_ssh_port=22 ansible_ssh_user=vagrant ansible_ssh_private_key_file={{ ansible_files }}/{{ item.hname }}_private_key"
+        create: yes
+        mode: 0600
+        owner: vagrant
+        group: vagrant
+      with_items:
+        - { hname: "soa11g",  ip: "10.10.10.60"}
+        - { hname: "wls1",  ip: "10.10.10.30"}
+        - { hname: "wls2",  ip: "10.10.10.40"}
 
-      - name: build inventory file
-        lineinfile:
-          dest: "{{ ansible_files }}/inventory"
-          regexp: "^{{ item.hname }}"
-          line: "{{ item.hname }} ansible_ssh_host={{ item.ip }} ansible_ssh_port=22 ansible_ssh_user=vagrant ansible_ssh_private_key_file={{ ansible_files }}/{{ item.hname }}_private_key"
-          create: yes
-          mode: 0600
-        with_items:
-          - { hname: "bpm11g",  ip: "10.10.10.50"}
-          - { hname: "soa11g",  ip: "10.10.10.60"}
-          - { hname: "wls1",  ip: "10.10.10.30"}
-          - { hname: "wls2",  ip: "10.10.10.40"}
+    - name: set alias
+      lineinfile:
+        dest: "{{ user_home }}/.bashrc"
+        regexp: "^alias ap="
+        line: "alias ap='ansible-playbook -i {{ ansible_files }}/inventory -v'"
 
-      - name: set alias
-        lineinfile:
-          dest: "{{ user_home }}/.bashrc"
-          regexp: "^alias ap="
-          line: "alias ap='ansible-playbook -i {{ ansible_files }}/inventory -v'"
+    - name: set ansible plugin path
+      lineinfile:
+        dest: "/etc/ansible/ansible.cfg"
+        regexp: "^callback_plugins"
+        line: "callback_plugins = /usr/share/ansible_plugins/callback_plugins:/vagrant/playbooks/plugins/callback_plugins/"
