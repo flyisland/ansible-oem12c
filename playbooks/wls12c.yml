@@ -3,14 +3,21 @@
     gather_facts: no
     sudo: yes
     roles:
+      - swapfile
       - iso_yum
       - oracle_user
       - java
       - wls12c
     vars:
-      java_file: "{{ software_dir }}/jdk-7u80-linux-x64.gz"
+      swap_file_size: 1G
+      swap_file_path: /swapfile
+
+      iso_fullname: "{{ software_dir }}/Oracle-Linux/7.2-V100082-01.iso"
+      iso_repo_name: OL72.repo
+
+      java_file: "{{ software_dir }}/jdk-8u77-linux-x64.tar.gz"
       java_base_path: "/usr/java"
-      java_unarchive_path: /usr/java/jdk1.7.0_80
+      java_unarchive_path: /usr/java/jdk1.8.0_77
 
       oracle_home: "{{ oracle_base }}/mw12c"
-      wls12c_file: "{{ software_dir }}/fmw_12.1.3.0.0_wls.jar"
+      wls12c_file: "{{ software_dir }}/fmw_12.2.1.0.0_wls.jar"
