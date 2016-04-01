@@ -1,0 +1,6 @@
+- name: using /dev/urandom as the SecureRandom seed source, since the default seed generater /dev/random is very slow
+  lineinfile:
+    dest: "{{ java_home }}/jre/lib/security/java.security"
+    state: present
+    regexp: "^securerandom.source"
+    line: "securerandom.source=file:/dev/urandom"

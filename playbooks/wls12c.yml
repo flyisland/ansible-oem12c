@@ -7,6 +7,7 @@
       - iso_yum
       - oracle_user
       - java
+      - java_security_urandom
       - wls12c
     vars:
       swap_file_size: 1G
