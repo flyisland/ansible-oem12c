@@ -10,7 +10,7 @@
     name: "{{ cdrom_path }}"
     src: "{{ iso_fullname }}"
     fstype: iso9660
-    opts: loop,ro
+    opts: loop,ro,nofail
     state: mounted
   when: not cdrom_mounted.stat.exists
 
@@ -25,7 +25,7 @@
   when: not iso_repo_created.stat.exists
 
 - template:
-    src: OL65.repo.j2
+    src: OL.repo.j2
     dest: "{{ yum_repo_path }}/{{ iso_repo_name }}"
   when: not iso_repo_created.stat.exists
 
